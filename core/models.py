@@ -119,6 +119,9 @@ class Product(BaseModel):
     def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class Stock(BaseModel):
     StockOut = '0'
