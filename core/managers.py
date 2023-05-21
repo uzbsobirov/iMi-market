@@ -103,3 +103,8 @@ class ActiveCategoryCustomManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 
+class AvailabledProducts(models.Manager):
+    def get_queryset(self):
+        return super(AvailabledProducts, self).get_queryset().filter(status='1')
+
+

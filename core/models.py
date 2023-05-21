@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-from core.managers import ActiveCategoryCustomManager
+from core.managers import ActiveCategoryCustomManager, AvailabledProducts
 
 
 def min_value_validator(value):
@@ -84,6 +84,10 @@ class Product(BaseModel):
         max_length=255,
         verbose_name='Product name'
     )
+    image = models.ImageField(
+        verbose_name='Product Image',
+        upload_to='products/%Y/%m/%d'
+    )
     slug = models.SlugField(
         max_length=255,
         null=True, blank=True
@@ -105,6 +109,7 @@ class Product(BaseModel):
     )
 
     objects = models.Manager()
+    objects_availabled = AvailabledProducts()
 
     class Meta:
         verbose_name = 'Product'
@@ -113,3 +118,52 @@ class Product(BaseModel):
 
     def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)
+
+
+class Stock(BaseModel):
+    StockOut = '0'
+    StockIn = '1'
+
+    STATUSES = (
+        (StockOut, 'Stack-out'),
+        (StockIn, 'Stack-in')
+    )
+
+    product = models.OneToOneField(
+        to=Product,
+        on_delete=models.CASCADE
+    )
+    quantity = models.PositiveBigIntegerField(
+        verbose_name='Product Quantity',
+        default=0,
+        validators=[min_value_validator]
+    )
+    type = models.CharField(
+        max_length=20,
+        choices=STATUSES,
+        default=STATUSES[0][0]
+    )
+
+    class Meta:
+        verbose_name = 'Stock'
+        verbose_name_plural = 'Stock'
+        db_table = 'Stock'
+        ordering = ['-date_created']
+
+    def save(self, commit=True, *args, **kwargs):
+        product = Product.objects.filter(id=self.product.pk)
+        if product.exists():
+            if not self.pk:
+                if self.quantity > 0:
+                    self.type = self.StockIn
+                    product = Product.objects.get(id=product.first().pk)
+                    product.status = '1'
+                    product.save()
+
+                else:
+                    self.type = self.StockOut
+                    product = Product.objects.get(id=product.first().pk)
+                    product.status = '0'
+                    product.save()
+
+                super(Stock, self).save(*args, **kwargs)
