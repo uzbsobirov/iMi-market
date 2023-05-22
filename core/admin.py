@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    Category, Stock, Product
+    Category, Stock, Product, History
 )
 
 uneditable_fields = ('id', 'date_created', 'date_updated')
@@ -44,3 +44,14 @@ class StockAdmin(admin.ModelAdmin):
     )
 
     fields = [field.name for field in Stock._meta.fields if field.name not in uneditable_fields]
+
+
+@admin.register(History)
+class HistoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'stock',
+        'quantity',
+        'type'
+    )
+
+    fields = [field.name for field in History._meta.fields if field.name not in uneditable_fields]

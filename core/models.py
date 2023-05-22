@@ -170,3 +170,90 @@ class Stock(BaseModel):
                     product.save()
 
                 super(Stock, self).save(*args, **kwargs)
+                stock = Stock.objects.get(id=self.pk)
+                if commit:
+                    History.objects.create(stock=stock, quantity=self.quantity, type=self.type)
+
+            else:
+                stock = Stock.objects.get(id=self.pk)
+                if self.quantity > stock.quantity:
+                    if commit:
+                        History.objects.create(stock=stock, quantity=self.quantity - stock.quantity, type='1')
+
+                elif self.quantity == stock.quantity:
+                    pass
+
+                else:
+                    if commit:
+                        History.objects.create(stock=stock, quantity=stock.quantity - self.quantity, type='0')
+
+                super(Stock, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.product.name
+
+
+class History(BaseModel):
+    STOCK_IN = '1'
+    STOCK_OUT = '0'
+
+    TYPES = (
+        (STOCK_IN, 'stock-in'),
+        (STOCK_OUT, 'stock-out')
+    )
+
+    stock = models.ForeignKey(
+        to=Stock,
+        on_delete=models.CASCADE
+    )
+    quantity = models.PositiveBigIntegerField(
+        verbose_name='Quantity'
+    )
+    type = models.CharField(
+        verbose_name='Type',
+        choices=TYPES,
+        max_length=12
+    )
+
+    class Meta:
+        verbose_name = 'History'
+        verbose_name_plural = 'Histories'
+        db_table = 'History'
+        ordering = ['date_created']
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            history = History.objects.get(id=self.pk)
+            if history.quantity < self.quantity:
+                self.stock.quantity += self.quantity - history.quantity
+                self.stock.save(commit=True)
+
+            else:
+                self.stock.quantity -= history.quantity - self.quantity
+                self.stock.save(commit=False)
+
+        elif self.quantity == 0:
+            pass
+        super(History, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.type == self.STOCK_IN:
+            if self.stock.quantity - self.quantity >= 0:
+                self.stock.quantity -= self.quantity
+                self.stock.save(commit=False)
+            else:
+                raise ValueError("Haven't got enought product!")
+        else:
+            if self.stock.quantity + self.quantity >= 0:
+                self.stock.quantity += self.quantity
+                self.stock.save(commit=False)
+
+            else:
+                raise ValueError("Haven't got enought product!")
+            
+        super(History, self).delete(*args, **kwargs)
+
+    def __str__(self):
+        return self.stock.product.name
+
+
