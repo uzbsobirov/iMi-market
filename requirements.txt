@@ -1,2 +1,6 @@
-django
+django~=4.2.1
 Pillow
+djangorestframework~=3.14.0
+django-faker~=0.2
+fake-factory~=9999.9.9
+ Faker~=18.9.0
