@@ -37,10 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_faker'
-
+    'rest_framework',
     # My apps
     'core.apps.CoreConfig',
+    'api.apps.ApiConfig'
 
 ]
 
