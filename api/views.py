@@ -11,7 +11,7 @@ class ProductsApiView(views.APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, *args,  **kwargs):
-        products = Product.objects.all()
+        products = Product.objects_availabled.all()
         serializer = self.serializer_class(instance=products, many=True)
         return Response(data=serializer.data)
 
@@ -57,7 +57,7 @@ class CategoriesApiView(views.APIView):
     serializer_class = CategorySerializer
 
     def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
+        categories = Category.objects_in_stock.all()
         serializer = self.serializer_class(instance=categories, many=True)
         return Response(data=serializer.data)
 
@@ -66,7 +66,7 @@ class CategoriesApiView(views.APIView):
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        categories = Category.objects.all()
+        categories = Category.objects_in_stock.all()
         seri = self.serializer_class(instance=categories, many=True)
         return Response(data=seri.data, status=status.HTTP_201_CREATED)
 
