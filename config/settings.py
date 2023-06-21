@@ -15,7 +15,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# AUTH 
+# AUTH
 AUTH_USER_MODEL = 'accounts.CustomUser'
 # LOGIN_REDIRECT_URL= reverse_lazy('home')
 # LOGOUT_REDIRECT_URL= reverse_lazy('login')
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     #
     'rest_framework',
     'django_q',
+    'django-cors-headers',
 
     # My apps
     'core.apps.CoreConfig',
@@ -66,6 +67,36 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# django cors headers settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173"
+]
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -145,13 +176,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 Q_CLUSTER = {
     'name': 'DjangORM',
     'workers': 2,  # The number of workers to use in the cluster.
-    'timeout': 300,  # The number of seconds a worker is allowed to spend on a task before it’s terminated.
+    # The number of seconds a worker is allowed to spend on a task before it’s terminated.
+    'timeout': 300,
     'retry': 300,  # The number of seconds a broker will wait for a cluster to finish a task,
                    # before it’s presented again.
-    'save_limit': 0,  # Limits the amount of successful tasks saved to Django. Set to 0 for unlimited.
-    'queue_limit': 50,  # This does not limit the amount of tasks that can be queued on the broker,
-                        # but rather how many tasks are kept in memory by a single cluster.
-    'bulk': 10,  # Sets the number of messages each cluster tries to get from the broker per call.
+    # Limits the amount of successful tasks saved to Django. Set to 0 for unlimited.
+    'save_limit': 0,
+    # This does not limit the amount of tasks that can be queued on the broker,
+    'queue_limit': 50,
+    # but rather how many tasks are kept in memory by a single cluster.
+    # Sets the number of messages each cluster tries to get from the broker per call.
+    'bulk': 10,
     'orm': 'default',
     "max_attempts": 1  # Limit the number of retry attempts for failed tasks
 }

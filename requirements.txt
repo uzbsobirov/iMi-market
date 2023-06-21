@@ -3,3 +3,4 @@ Pillow
 djangorestframework~=3.14.0
 django-redis
 django-q
+django-cors-headers
