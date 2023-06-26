@@ -66,6 +66,21 @@ class Category(BaseModel):
         super(Category, self).save(*args, **kwargs)
 
 
+class ProductSeller(BaseModel):
+    seller_name = models.CharField(
+        max_length=15,
+        verbose_name='Product Seller'
+    )
+
+    class Meta:
+        verbose_name = 'ProductSeller'
+        verbose_name_plural = 'ProductSellers'
+        db_table = 'ProductSeller'
+
+    def __str__(self):
+        return self.seller_name
+
+
 class Product(BaseModel):
     StockOut = '0'
     StockIn = '1'
@@ -84,10 +99,6 @@ class Product(BaseModel):
         max_length=255,
         verbose_name='Product name'
     )
-    image = models.ImageField(
-        verbose_name='Product Image',
-        upload_to='products/%Y/%m/%d'
-    )
     slug = models.SlugField(
         max_length=255,
         null=True, blank=True
@@ -95,9 +106,18 @@ class Product(BaseModel):
     description = models.TextField(
         verbose_name='Product description'
     )
+    seller = models.ManyToManyField(
+        to=ProductSeller
+    )
     price = models.DecimalField(
         verbose_name='Product price',
         max_digits=10,
+        decimal_places=2,
+        validators=[min_value_validator]
+    )
+    discount = models.DecimalField(
+        verbose_name='Product discount',
+        max_digits=5,
         decimal_places=2,
         validators=[min_value_validator]
     )
@@ -121,6 +141,22 @@ class Product(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class ProductImage(BaseModel):
+    product = models.ForeignKey(
+        to=Product,
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(
+        verbose_name='Product Image',
+        upload_to='products/%Y/%m/%d'
+    )
+
+    class Meta:
+        verbose_name = 'ProductImage'
+        verbose_name_plural = 'ProductImages'
+        db_table = 'ProductImage'
 
 
 class Stock(BaseModel):
