@@ -41,6 +41,7 @@ class Category(BaseModel):
         max_length=255,
         null=True, blank=True
     )
+    icon = models.TextField()
     description = models.TextField(
         verbose_name='Category description'
     )
@@ -208,20 +209,23 @@ class Stock(BaseModel):
                 super(Stock, self).save(*args, **kwargs)
                 stock = Stock.objects.get(id=self.pk)
                 if commit:
-                    History.objects.create(stock=stock, quantity=self.quantity, type=self.type)
+                    History.objects.create(
+                        stock=stock, quantity=self.quantity, type=self.type)
 
             else:
                 stock = Stock.objects.get(id=self.pk)
                 if self.quantity > stock.quantity:
                     if commit:
-                        History.objects.create(stock=stock, quantity=self.quantity - stock.quantity, type='1')
+                        History.objects.create(
+                            stock=stock, quantity=self.quantity - stock.quantity, type='1')
 
                 elif self.quantity == stock.quantity:
                     pass
 
                 else:
                     if commit:
-                        History.objects.create(stock=stock, quantity=stock.quantity - self.quantity, type='0')
+                        History.objects.create(
+                            stock=stock, quantity=stock.quantity - self.quantity, type='0')
 
                 super(Stock, self).save(*args, **kwargs)
 
@@ -286,10 +290,8 @@ class History(BaseModel):
 
             else:
                 raise ValueError("Haven't got enought product!")
-            
+
         super(History, self).delete(*args, **kwargs)
 
     def __str__(self):
         return self.stock.product.name
-
-

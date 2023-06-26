@@ -11,11 +11,13 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'slug',
+        'icon',
         'description',
         'status'
     )
 
-    fields = [field.name for field in Category._meta.fields if field.name not in uneditable_fields]
+    fields = [
+        field.name for field in Category._meta.fields if field.name not in uneditable_fields]
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -31,7 +33,8 @@ class ProductAdmin(admin.ModelAdmin):
         'status'
     )
 
-    fields = [field.name for field in Product._meta.fields if field.name not in uneditable_fields]
+    fields = [
+        field.name for field in Product._meta.fields if field.name not in uneditable_fields]
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -43,7 +46,8 @@ class StockAdmin(admin.ModelAdmin):
         'type'
     )
 
-    fields = [field.name for field in Stock._meta.fields if field.name not in uneditable_fields]
+    fields = [
+        field.name for field in Stock._meta.fields if field.name not in uneditable_fields]
 
 
 @admin.register(History)
@@ -54,7 +58,8 @@ class HistoryAdmin(admin.ModelAdmin):
         'type'
     )
 
-    fields = [field.name for field in History._meta.fields if field.name not in uneditable_fields]
+    fields = [
+        field.name for field in History._meta.fields if field.name not in uneditable_fields]
 
 
 @admin.register(ProductImage)
@@ -64,7 +69,8 @@ class ProductImageAdmin(admin.ModelAdmin):
         'image'
     )
 
-    fields = [field.name for field in ProductImage._meta.fields if field.name not in uneditable_fields]
+    fields = [
+        field.name for field in ProductImage._meta.fields if field.name not in uneditable_fields]
 
 
 @admin.register(ProductSeller)
@@ -73,4 +79,5 @@ class ProductSellerAdmin(admin.ModelAdmin):
         'seller_name'
     )
 
-    fields = [field.name for field in ProductSeller._meta.fields if field.name not in uneditable_fields]
+    fields = [
+        field.name for field in ProductSeller._meta.fields if field.name not in uneditable_fields]
