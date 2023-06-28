@@ -5,3 +5,5 @@ django-redis
 django-q
 django-cors-headers
 environs
+psycopg2-binary
+psycopg2

@@ -41,7 +41,6 @@ class Category(BaseModel):
         max_length=255,
         null=True, blank=True
     )
-    icon = models.TextField()
     description = models.TextField(
         verbose_name='Category description'
     )
