@@ -69,7 +69,7 @@ class Category(BaseModel):
 
 class ProductSeller(BaseModel):
     seller_name = models.CharField(
-        max_length=15,
+        max_length=50,
         verbose_name='Product Seller'
     )
 
