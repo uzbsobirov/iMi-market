@@ -107,7 +107,8 @@ class Product(BaseModel):
         verbose_name='Product description'
     )
     seller = models.ManyToManyField(
-        to=ProductSeller
+        to=ProductSeller,
+        blank=True
     )
     price = models.DecimalField(
         verbose_name='Product price',
@@ -119,7 +120,8 @@ class Product(BaseModel):
         verbose_name='Product discount',
         max_digits=5,
         decimal_places=2,
-        validators=[min_value_validator]
+        validators=[min_value_validator],
+        null=True, blank=True
     )
     status = models.CharField(
         verbose_name='Product status',

@@ -1,5 +1,10 @@
 from pathlib import Path
-from django.urls import reverse_lazy
+from environs import Env
+
+
+env = Env()
+env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,18 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fq!!2#fz^^sl==ad((b#($mrihn)+yq4fs6h)=798q-tbb@#c3'
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.str('DEBUG')
 
 ALLOWED_HOSTS = []
 
 # AUTH
 AUTH_USER_MODEL = 'accounts.CustomUser'
-# LOGIN_REDIRECT_URL= reverse_lazy('home')
-# LOGOUT_REDIRECT_URL= reverse_lazy('login')
-# LOGIN_URL = reverse_lazy('login')
 
 AUTH_PASSWORD_VALIDATORS = [
     {

@@ -19,20 +19,22 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = (
-        'category',
-        'name',
-        'image',
-        'slug',
-        'description',
-        'price',
-        'status'
-    )
+# @admin.register(Product)
+# class ProductAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'category',
+#         'name',
+#         'slug',
+#         'description',
+#         'price',
+#         'discount',
+#         'status'
+#     )
+#
+#     fields = [field.name for field in Product._meta.fields if field.name not in uneditable_fields]
+#     prepopulated_fields = {'slug': ('name',)}
 
-    fields = [field.name for field in Product._meta.fields if field.name not in uneditable_fields]
-    prepopulated_fields = {'slug': ('name',)}
+admin.site.register(Product)
 
 
 @admin.register(Stock)
@@ -70,7 +72,7 @@ class ProductImageAdmin(admin.ModelAdmin):
 @admin.register(ProductSeller)
 class ProductSellerAdmin(admin.ModelAdmin):
     list_display = (
-        'seller_name'
+        'seller_name',
     )
 
     fields = [field.name for field in ProductSeller._meta.fields if field.name not in uneditable_fields]
