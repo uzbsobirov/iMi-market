@@ -18,7 +18,7 @@ SECRET_KEY = env.str('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.str('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['imi-market.uz']
 
 # AUTH
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -128,8 +128,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backend.postgresql_psycopg2',
+        'NAME': 'imigroup',
+        'USER': 'imigroup',
+        'PASSWORD': 'imigroup',
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
