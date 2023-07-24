@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework import views
 from rest_framework import views
-from .serializers import ProductSerializer, CategorySerializer, HistorySerializer
-from core.models import Product, Category, History
+from .serializers import ProductSerializer, CategorySerializer, HistorySerializer, ProductImageSerializer
+from core.models import Product, Category, History, ProductImage
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -10,7 +10,7 @@ from rest_framework import status
 class ProductsApiView(views.APIView):
     serializer_class = ProductSerializer
 
-    def get(self, request, *args,  **kwargs):
+    def get(self, request, *args, **kwargs):
         products = Product.objects_availabled.all()
         serializer = self.serializer_class(instance=products, many=True)
         return Response(data=serializer.data)
@@ -148,3 +148,52 @@ class HistoryApiView(views.APIView):
         history = get_object_or_404(History, pk=pk)
         history.delete()
         return Response(data={'Deleted': 'History was succesfully deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductImagesApiView(views.APIView):
+    serializer_class = ProductImageSerializer
+
+    def get(self, request, *args, **kwargs):
+        productimages = ProductImage.objects.all()
+        serializer = self.serializer_class(instance=productimages, many=True)
+        return Response(data=serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        productimages = ProductImage.objects.all()
+        seria = self.serializer_class(instance=productimages, many=True)
+        return Response(data=seria.data, status=status.HTTP_201_CREATED)
+
+
+class ProductImageApiView(views.APIView):
+    serializer_class = ProductImageSerializer
+
+    def get(self, request, pk, *args, **kwargs):
+        productimages = get_object_or_404(ProductImage, pk=pk)
+        serializer = self.serializer_class(instance=productimages)
+        return Response(data=serializer.data)
+
+    def put(self, request, pk, *args, **kwargs):
+        data = request.data
+        productimages = get_object_or_404(ProductImage, pk=pk)
+        serializer = self.serializer_class(instance=productimages, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data)
+
+    def patch(self, request, pk, *args, **kwargs):
+        data = request.data
+        productimages = get_object_or_404(ProductImage, pk=pk)
+        serializer = self.serializer_class(instance=productimages, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data)
+
+    def delete(self, request, pk, *args, **kwargs):
+        productimages = get_object_or_404(ProductImage, pk=pk)
+        productimages.delete()
+        return Response(data={'Deleted': 'ProductImage was succesfully deleted'}, status=status.HTTP_204_NO_CONTENT)

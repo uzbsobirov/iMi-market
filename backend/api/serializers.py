@@ -3,6 +3,8 @@ from core.models import Product, Category, History, Stock
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 
+from core.models import ProductImage
+
 
 def min_value_validator(value):
     if value < 0:
@@ -50,8 +52,10 @@ class HistorySerializer(serializers.ModelSerializer):
         read_only_fields = ROF
 
 
-class StockSerializer(serializers.ModelSerializer):
+class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Stock
+        model = ProductImage
         fields = "__all__"
         read_only_fields = ROF
+
+

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-from core.managers import ActiveCategoryCustomManager, AvailabledProducts
+from .managers import ActiveCategoryCustomManager, AvailabledProducts
 
 
 def min_value_validator(value):
